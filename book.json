@@ -1,0 +1,15 @@
+{
+    "plugins": [
+        "hide-element",
+		"back-to-top-button",
+		"-lunr",
+		"-search",
+		"search-pro",
+		"splitter"
+    ],
+    "pluginsConfig": {
+        "hide-element": {
+            "elements": [".gitbook-link"]
+        }
+    }
+}
