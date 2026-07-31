@@ -1004,6 +1004,7 @@ npm install -g gitbook-summary
 
 - [【复现文章】Timeline-漏洞复现-2020](【复现文章】Timeline-漏洞复现-2020/README.md)
 
+- [Dark-Moon](https://github.com/ASCIT31/Dark-Moon)：开源自托管的自主式 AI 渗透平台，MCP 编排侦察/利用/报告智能体，覆盖 Web/API/AD/Kubernetes，内置本地隐私令牌化网关。
 - 【工具文章】tools
 
   - [“域前置 Cobalt Strike” 之踩坑](【工具文章】tools/“域前置 Cobalt Strike” 之踩坑.md)
